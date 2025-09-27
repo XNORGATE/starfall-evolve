@@ -11,7 +11,7 @@ const firebaseConfig = {
   messagingSenderId: "962064377413",
   appId: "1:962064377413:web:cec4d457f0166fc34c252c",
   measurementId: "G-N4X46WNQ90"
-};
+}; 
 
 // TODO: Replace the above with your actual Firebase config from:
 // 1. Go to https://console.firebase.google.com/
