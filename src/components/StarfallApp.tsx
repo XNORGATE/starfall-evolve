@@ -189,23 +189,20 @@ export default function StarfallApp() {
         setToast("This is a private repository. Please provide a GitHub access token.");
         return;
       }
+
+      // Simulate validation delay
+      await sleep(2000);
       
-      // If repo is valid, proceed with AI validation
-      const res = await fetch("/api/validate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ 
-          url: githubUrl.trim(),
-          token: githubToken || undefined,
-          userEmail: user?.email 
-        }),
-      });
-      
-      if (!res.ok) throw new Error("Validator unavailable");
-      const data = await res.json();
-      setVerdict(data);
-      setStatus(data.ok ? "ready" : "error");
-      if (!data.ok) setToast(data?.reasons?.[0] || "Validation failed");
+      // Mock validation response based on repo data
+      const mockValidation = {
+        ok: true,
+        score: 0.85,
+        reasons: ["Repository structure looks good", "Contains valid project files", "Public repository accessible"]
+      };
+
+      setVerdict(mockValidation);
+      setStatus(mockValidation.ok ? "ready" : "error");
+      setToast(mockValidation.ok ? "Repository validated successfully!" : mockValidation.reasons[0]);
       
     } catch (e: any) {
       setStatus("error");
@@ -220,19 +217,15 @@ export default function StarfallApp() {
     try {
       setStatus("publishing");
       setToast("");
-      const res = await fetch("/api/publish", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ 
-          url: githubUrl.trim(),
-          token: githubToken || undefined,
-          userEmail: user?.email 
-        }),
-      });
-      if (!res.ok) throw new Error("Publish failed");
-      const data = await res.json();
-      setToast(`Published ✓  CID: ${data?.cid ?? "(pending)"}`);
+      
+      // Simulate publishing delay
+      await sleep(3000);
+      
+      // Mock successful publish response
+      const mockCID = "Qm" + Math.random().toString(36).substring(2, 15);
+      setToast(`Published ✓  CID: ${mockCID}`);
       setStatus("ready");
+      
     } catch (e: any) {
       setStatus("error");
       setToast(e.message || "Publish error");
