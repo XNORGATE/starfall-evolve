@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { signInWithGoogle, signOutUser, onAuthStateChanged } from "@/lib/firebase";
 
 /**
  * Self‑Evolved Web Host — Frontend Shell (UI‑only, no secrets)
@@ -31,47 +32,80 @@ export default function StarfallApp() {
 
   const disabled = !githubUrl || status === "validating" || status === "publishing" || (isPrivateRepo && !githubToken);
 
-  // Check auth status on mount
+  // Check auth status on mount and listen for changes
   useEffect(() => {
-    // TODO: Initialize Firebase and check if user is logged in
-    // For now, simulate auth check
-    const checkAuth = async () => {
+    const unsubscribe = onAuthStateChanged((firebaseUser) => {
+      if (firebaseUser) {
+        const userData = {
+          email: firebaseUser.email || '',
+          name: firebaseUser.displayName || 'User',
+          uid: firebaseUser.uid
+        };
+        setUser(userData);
+        localStorage.setItem('user', JSON.stringify(userData));
+      } else {
+        setUser(null);
+        localStorage.removeItem('user');
+      }
       setAuthLoading(false);
-      // Simulate existing login
-      // const existingUser = localStorage.getItem('user');
-      // if (existingUser) setUser(JSON.parse(existingUser));
-    };
-    checkAuth();
+    });
+
+    return () => unsubscribe();
   }, []);
+
+  // Auto-validate GitHub URL when it changes
+  useEffect(() => {
+    const autoValidate = async () => {
+      if (githubUrl && githubUrl.includes('github.com') && status === "idle") {
+        // Add small delay to avoid rapid API calls
+        const timeoutId = setTimeout(() => {
+          handleValidate();
+        }, 1000);
+        
+        return () => clearTimeout(timeoutId);
+      }
+    };
+
+    autoValidate();
+  }, [githubUrl, githubToken]);
 
   async function handleGoogle() {
     try {
       setAuthLoading(true);
-      // TODO: Replace with actual Firebase Google auth
-      // For demo, simulate successful login
-      const mockUser = {
-        email: "user@example.com",
-        name: "Demo User"
-      };
-      setUser(mockUser);
-      localStorage.setItem('user', JSON.stringify(mockUser));
-      setToast("Successfully logged in with Google!");
-    } catch (error) {
+      setToast("");
+      
+      const result = await signInWithGoogle();
+      
+      if (result.success) {
+        setToast("Successfully logged in with Google!");
+        // User state will be updated by the auth listener
+      } else {
+        setToast(result.error || "Google login failed. Please try again.");
+      }
+    } catch (error: any) {
       setToast("Google login failed. Please try again.");
     } finally {
       setAuthLoading(false);
     }
   }
 
-  function handleLogout() {
-    setUser(null);
-    localStorage.removeItem('user');
-    setGithubUrl("");
-    setGithubToken("");
-    setIsPrivateRepo(false);
-    setStatus("idle");
-    setVerdict(null);
-    setToast("");
+  async function handleLogout() {
+    try {
+      const result = await signOutUser();
+      if (result.success) {
+        // Reset all form state
+        setGithubUrl("");
+        setGithubToken("");
+        setIsPrivateRepo(false);
+        setStatus("idle");
+        setVerdict(null);
+        setToast("");
+      } else {
+        setToast("Logout failed. Please try again.");
+      }
+    } catch (error: any) {
+      setToast("Logout failed. Please try again.");
+    }
   }
 
   async function validateGitHubRepo(url: string, token?: string) {
@@ -237,10 +271,6 @@ export default function StarfallApp() {
                 </div>
               )}
             </div>
-
-            <p className="text-center text-xs text-white/40 mt-6">
-              Secure authentication powered by Firebase
-            </p>
           </div>
         </div>
       </div>
@@ -304,16 +334,15 @@ export default function StarfallApp() {
                   setIsPrivateRepo(false);
                   setStatus("idle");
                   setVerdict(null);
+                  setToast("");
                 }}
                 className="w-full rounded-2xl border border-white/10 bg-white/10 px-4 py-3 text-sm placeholder-white/40 outline-none focus:ring-2 focus:ring-white/30"
               />
-              <button
-                onClick={handleValidate}
-                disabled={disabled}
-                className={`rounded-2xl px-4 py-3 text-sm font-medium transition ${disabled ? "bg-white/10 text-white/40" : "bg-emerald-400 text-black hover:brightness-95"}`}
-              >
-                Validate
-              </button>
+              {status === "validating" && (
+                <div className="flex items-center justify-center px-4 py-3 rounded-2xl bg-emerald-400/20">
+                  <span className="h-2 w-2 animate-pulse rounded-full bg-emerald-400" />
+                </div>
+              )}
             </div>
 
             {/* GitHub Token Input for Private Repos */}
