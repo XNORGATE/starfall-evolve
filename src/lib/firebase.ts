@@ -7,7 +7,7 @@ const firebaseConfig = {
   apiKey: "AIzaSyA51BBI0SMHT1QC-EGBXf4K_wcvZhyxIOI",
   authDomain: "hackertiger-6821e.firebaseapp.com",
   projectId: "hackertiger-6821e",
-  storageBucket: "hackertiger-6821e.firebasestorage.app",
+  storageBucket: "hackertiger-6821e.firebasestorage.app", 
   messagingSenderId: "962064377413",
   appId: "1:962064377413:web:cec4d457f0166fc34c252c",
   measurementId: "G-N4X46WNQ90"
