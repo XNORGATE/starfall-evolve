@@ -30,6 +30,11 @@ export default function StarfallApp() {
   const [status, setStatus] = useState("idle"); // idle | validating | ready | error | publishing
   const [verdict, setVerdict] = useState<any>(null); // { ok, score, reasons }
   const [toast, setToast] = useState("");
+  const [showPrivateKeyModal, setShowPrivateKeyModal] = useState(false);
+  const [deploymentResults, setDeploymentResults] = useState<{
+    url: string;
+    blockId: string;
+  } | null>(null);
 
   const disabled = !githubUrl || status === "validating" || status === "publishing" || (isPrivateRepo && !githubToken);
 
@@ -241,7 +246,13 @@ export default function StarfallApp() {
   }
 
   async function handlePublish() {
+    // Show private key warning modal first
+    setShowPrivateKeyModal(true);
+  }
+
+  async function proceedWithPublish() {
     try {
+      setShowPrivateKeyModal(false);
       setStatus("publishing");
       setToast("");
       
@@ -249,9 +260,16 @@ export default function StarfallApp() {
       await sleep(3000);
       
       // Mock successful publish response
-      const mockCID = "Qm" + Math.random().toString(36).substring(2, 15);
-      setToast(`Published ✓  CID: ${mockCID}`);
+      const mockUrl = `https://starfall-${Math.random().toString(36).substring(2, 8)}.decentralized.app`;
+      const mockBlockId = `0x${Math.random().toString(16).substring(2, 15)}${Math.random().toString(16).substring(2, 15)}`;
+      
+      setDeploymentResults({
+        url: mockUrl,
+        blockId: mockBlockId
+      });
+      
       setStatus("ready");
+      setToast(`Successfully deployed to blockchain!`);
       
     } catch (e: any) {
       setStatus("error");
@@ -480,6 +498,99 @@ export default function StarfallApp() {
             <span className="text-xs text-white/50">Backend will handle IPFS + blockchain. No secrets in the browser.</span>
           </div>
         </section>
+
+        {/* Deployment Results Grid */}
+        {deploymentResults && (
+          <section className="mx-auto mt-6 max-w-3xl">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              {/* Deployment URL Card */}
+              <div className="rounded-3xl border border-white/10 bg-white/5 backdrop-blur p-6">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="h-10 w-10 rounded-2xl bg-orange-500/20 flex items-center justify-center">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" className="text-orange-400">
+                      <path d="M12 2l8 5v10l-8 5-8-5V7l8-5z" stroke="currentColor" strokeWidth="1.5"/>
+                      <path d="M8 12l4-4 4 4" stroke="currentColor" strokeWidth="1.5"/>
+                    </svg>
+                  </div>
+                  <h3 className="text-lg font-semibold">Deployment URL</h3>
+                </div>
+                <div className="space-y-3">
+                  <div className="flex items-center gap-2 text-sky-400">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                      <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" stroke="currentColor" strokeWidth="1.5"/>
+                      <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" stroke="currentColor" strokeWidth="1.5"/>
+                    </svg>
+                    <span className="font-mono text-sm break-all">{deploymentResults.url}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="h-2 w-2 rounded-full bg-emerald-400"></div>
+                    <span className="text-emerald-400 text-sm font-medium">Live static</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Blockchain Block ID Card */}
+              <div className="rounded-3xl border border-white/10 bg-white/5 backdrop-blur p-6">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="h-10 w-10 rounded-2xl bg-purple-500/20 flex items-center justify-center">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" className="text-purple-400">
+                      <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" stroke="currentColor" strokeWidth="1.5"/>
+                      <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" stroke="currentColor" strokeWidth="1.5"/>
+                      <circle cx="12" cy="12" r="1" fill="currentColor"/>
+                    </svg>
+                  </div>
+                  <h3 className="text-lg font-semibold">Blockchain Block ID</h3>
+                </div>
+                <div className="font-mono text-sm text-white/80 break-all">
+                  {deploymentResults.blockId}
+                </div>
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* Private Key Warning Modal */}
+        {showPrivateKeyModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur">
+            <div className="max-w-md w-full rounded-3xl border border-white/10 bg-gradient-to-br from-zinc-900 to-black p-6 shadow-2xl">
+              <div className="text-center mb-6">
+                <div className="h-16 w-16 rounded-full bg-yellow-500/20 flex items-center justify-center mx-auto mb-4">
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" className="text-yellow-400">
+                    <path d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" stroke="currentColor" strokeWidth="2"/>
+                  </svg>
+                </div>
+                <h2 className="text-xl font-semibold mb-2">Private Key Generated</h2>
+                <p className="text-white/70 text-sm mb-4">
+                  A unique private key has been generated for your deployment. 
+                </p>
+              </div>
+              
+              <div className="rounded-2xl border border-yellow-500/20 bg-yellow-500/5 p-4 mb-6">
+                <div className="font-mono text-sm text-center text-yellow-400 mb-2">
+                  pk_7f9e2a1b8c3d4e5f6789abc...
+                </div>
+                <p className="text-xs text-white/60 text-center">
+                  ⚠️ Please remember this key carefully. You'll need it to manage your deployment.
+                </p>
+              </div>
+
+              <div className="flex gap-3">
+                <button
+                  onClick={() => setShowPrivateKeyModal(false)}
+                  className="flex-1 rounded-2xl border border-white/20 bg-white/10 px-4 py-3 text-sm font-medium text-white/70 hover:text-white transition"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={proceedWithPublish}
+                  className="flex-1 rounded-2xl bg-sky-400 px-4 py-3 text-sm font-medium text-black hover:brightness-95 transition"
+                >
+                  I've Noted It, Deploy
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* FAQ mini */}
         <section className="mx-auto mt-6 max-w-3xl text-sm text-white/70">
