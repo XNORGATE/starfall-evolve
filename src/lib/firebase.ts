@@ -1,4 +1,4 @@
-import { initializeApp } from 'firebase/app';
+import { initializeApp, getApps } from 'firebase/app';
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, User } from 'firebase/auth';
 
 // Firebase configuration - Replace with your actual Firebase project config
@@ -20,8 +20,17 @@ const firebaseConfig = {
 // 4. Add a Web app if you haven't already
 // 5. Copy the config object and replace the above
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
+// Initialize Firebase with duplicate app protection
+let app;
+try {
+  app = initializeApp(firebaseConfig);
+} catch (error: any) {
+  if (error.code === 'app/duplicate-app') {
+    app = getApps()[0]; // Use existing app
+  } else {
+    throw error;
+  }
+}
 export const auth = getAuth(app);
 export const googleProvider = new GoogleAuthProvider();
 
