@@ -261,7 +261,7 @@ export default function StarfallApp() {
       await sleep(3000);
       
       // Mock successful publish response
-      const mockUrl = `https://starfall-${Math.random().toString(36).substring(2, 8)}.decentralized.app`;
+      const mockUrl = `https://hackertiger-${Math.random().toString(36).substring(2, 8)}.decentralized.app`;
       const mockBlockId = `0x${Math.random().toString(16).substring(2, 15)}${Math.random().toString(16).substring(2, 15)}`;
       
       const deploymentResults = {

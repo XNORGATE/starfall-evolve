@@ -13,8 +13,8 @@ interface Deployment {
 
 export default function DeploymentManager() {
   const [deployments, setDeployments] = useState<Deployment[]>([]);
-  const [editingId, setEditingId] = useState<string | null>(null);
-  const [editUrl, setEditUrl] = useState("");
+  const [updatingId, setUpdatingId] = useState<string | null>(null);
+  const [newRepoUrl, setNewRepoUrl] = useState("");
   const { toast } = useToast();
 
   useEffect(() => {
@@ -29,30 +29,55 @@ export default function DeploymentManager() {
     setDeployments(updatedDeployments);
   };
 
-  const handleUpdate = (id: string) => {
+  const handleUpdateRepo = (id: string) => {
     const deployment = deployments.find(d => d.id === id);
     if (deployment) {
-      setEditingId(id);
-      setEditUrl(deployment.url);
+      setUpdatingId(id);
+      setNewRepoUrl(deployment.repoUrl);
     }
   };
 
-  const saveUpdate = async (id: string) => {
-    // Simulate update API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
+  const saveRepoUpdate = async (id: string) => {
+    if (!newRepoUrl.includes('github.com')) {
+      toast({
+        title: "Invalid repository URL",
+        description: "Please enter a valid GitHub repository URL.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Set status to updating
+    const updatingDeployments = deployments.map(d => 
+      d.id === id ? { ...d, status: "updating" as const } : d
+    );
+    setDeployments(updatingDeployments);
+
+    // Simulate repo update and redeployment
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    
+    // Generate new deployment URL with hackertiger prefix
+    const newUrl = `https://hackertiger-${Math.random().toString(36).substring(2, 8)}.decentralized.app`;
+    const newBlockId = `0x${Math.random().toString(16).substring(2, 15)}${Math.random().toString(16).substring(2, 15)}`;
     
     const updatedDeployments = deployments.map(d => 
       d.id === id 
-        ? { ...d, url: editUrl, status: "active" as const }
+        ? { 
+            ...d, 
+            repoUrl: newRepoUrl, 
+            url: newUrl,
+            blockId: newBlockId,
+            status: "active" as const 
+          }
         : d
     );
     
     saveToStorage(updatedDeployments);
-    setEditingId(null);
-    setEditUrl("");
+    setUpdatingId(null);
+    setNewRepoUrl("");
     toast({
-      title: "Deployment updated",
-      description: "Your deployment URL has been successfully updated.",
+      title: "Repository updated",
+      description: "Your deployment has been updated with the new repository.",
     });
   };
 
@@ -72,9 +97,9 @@ export default function DeploymentManager() {
     });
   };
 
-  const cancelEdit = () => {
-    setEditingId(null);
-    setEditUrl("");
+  const cancelUpdate = () => {
+    setUpdatingId(null);
+    setNewRepoUrl("");
   };
 
   return (
@@ -139,12 +164,54 @@ export default function DeploymentManager() {
                   {/* Repository Info */}
                   <div>
                     <h3 className="font-semibold mb-2">Repository</h3>
-                    <p className="text-sm text-sky-400 font-mono break-all mb-2">
-                      {deployment.repoUrl}
-                    </p>
-                    <p className="text-xs text-white/50">
-                      Deployed {new Date(deployment.createdAt).toLocaleDateString()}
-                    </p>
+                    {updatingId === deployment.id ? (
+                      <div className="space-y-3">
+                        <input
+                          type="url"
+                          value={newRepoUrl}
+                          onChange={(e) => setNewRepoUrl(e.target.value)}
+                          placeholder="https://github.com/owner/repo"
+                          className="w-full rounded-xl border border-white/20 bg-white/10 px-3 py-2 text-sm font-mono outline-none focus:ring-2 focus:ring-sky-400/50"
+                        />
+                        <div className="flex gap-2">
+                          <button
+                            onClick={() => saveRepoUpdate(deployment.id)}
+                            className="rounded-xl bg-emerald-500 px-3 py-1.5 text-xs font-medium text-black hover:brightness-95 transition"
+                          >
+                            Update & Redeploy
+                          </button>
+                          <button
+                            onClick={cancelUpdate}
+                            className="rounded-xl border border-white/20 bg-white/10 px-3 py-1.5 text-xs font-medium text-white/70 hover:text-white transition"
+                          >
+                            Cancel
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
+                      <>
+                        <div className="flex items-center justify-between mb-2">
+                          <p className="text-sm text-sky-400 font-mono break-all">
+                            {deployment.repoUrl}
+                          </p>
+                          <button
+                            onClick={() => handleUpdateRepo(deployment.id)}
+                            className="ml-2 text-white/40 hover:text-white transition"
+                            title="Update Repository"
+                          >
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                              <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" stroke="currentColor" strokeWidth="1.5"/>
+                              <path d="M3 3v5h5" stroke="currentColor" strokeWidth="1.5"/>
+                              <path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16" stroke="currentColor" strokeWidth="1.5"/>
+                              <path d="M21 21v-5h-5" stroke="currentColor" strokeWidth="1.5"/>
+                            </svg>
+                          </button>
+                        </div>
+                        <p className="text-xs text-white/50">
+                          Deployed {new Date(deployment.createdAt).toLocaleDateString()}
+                        </p>
+                      </>
+                    )}
                   </div>
 
                   {/* Deployment Details */}
@@ -160,54 +227,20 @@ export default function DeploymentManager() {
                         </div>
                         <div className="flex items-center gap-2">
                           <div className="h-2 w-2 rounded-full bg-emerald-400"></div>
-                          <span className="text-emerald-400 text-xs font-medium">Live</span>
+                          <span className="text-emerald-400 text-xs font-medium">
+                            {deployment.status === "updating" ? "Updating..." : "Live"}
+                          </span>
                         </div>
                       </div>
                       
-                      {editingId === deployment.id ? (
-                        <div className="space-y-3">
-                          <input
-                            type="url"
-                            value={editUrl}
-                            onChange={(e) => setEditUrl(e.target.value)}
-                            className="w-full rounded-xl border border-white/20 bg-white/10 px-3 py-2 text-sm font-mono outline-none focus:ring-2 focus:ring-sky-400/50"
-                          />
-                          <div className="flex gap-2">
-                            <button
-                              onClick={() => saveUpdate(deployment.id)}
-                              className="rounded-xl bg-emerald-500 px-3 py-1.5 text-xs font-medium text-black hover:brightness-95 transition"
-                            >
-                              Save
-                            </button>
-                            <button
-                              onClick={cancelEdit}
-                              className="rounded-xl border border-white/20 bg-white/10 px-3 py-1.5 text-xs font-medium text-white/70 hover:text-white transition"
-                            >
-                              Cancel
-                            </button>
-                          </div>
-                        </div>
-                      ) : (
-                        <div className="flex items-center justify-between">
-                          <a 
-                            href={deployment.url} 
-                            target="_blank" 
-                            rel="noopener noreferrer"
-                            className="text-sky-400 font-mono text-sm hover:underline break-all"
-                          >
-                            {deployment.url}
-                          </a>
-                          <button
-                            onClick={() => handleUpdate(deployment.id)}
-                            className="ml-2 text-white/40 hover:text-white transition"
-                          >
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                              <path d="M12 20h9" stroke="currentColor" strokeWidth="1.5"/>
-                              <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" stroke="currentColor" strokeWidth="1.5"/>
-                            </svg>
-                          </button>
-                        </div>
-                      )}
+                      <a 
+                        href={deployment.url} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="text-sky-400 font-mono text-sm hover:underline break-all"
+                      >
+                        {deployment.url}
+                      </a>
                     </div>
 
                     {/* Blockchain Block ID */}
