@@ -183,6 +183,9 @@ export default function StarfallApp() {
       // First validate GitHub repo access
       const repoValidation = await validateGitHubRepo(githubUrl.trim(), githubToken || undefined);
       
+      // Reset private repo flag since we got a successful response
+      setIsPrivateRepo(false);
+      
       if (repoValidation.isPrivate && !githubToken) {
         setIsPrivateRepo(true);
         setStatus("idle");
@@ -207,9 +210,8 @@ export default function StarfallApp() {
     } catch (e: any) {
       setStatus("error");
       setToast(e.message || "Something went wrong");
-      if (e.message.includes("private")) {
-        setIsPrivateRepo(true);
-      }
+      // Only set private repo flag if we explicitly detect it's private from the API response
+      // Don't set it based on error messages that might be misleading
     }
   }
 
