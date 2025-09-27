@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { signInWithGoogle, signOutUser, onAuthStateChanged } from "@/lib/firebase";
 
 /**
@@ -263,10 +264,26 @@ export default function StarfallApp() {
       const mockUrl = `https://starfall-${Math.random().toString(36).substring(2, 8)}.decentralized.app`;
       const mockBlockId = `0x${Math.random().toString(16).substring(2, 15)}${Math.random().toString(16).substring(2, 15)}`;
       
-      setDeploymentResults({
+      const deploymentResults = {
         url: mockUrl,
         blockId: mockBlockId
-      });
+      };
+      
+      setDeploymentResults(deploymentResults);
+      
+      // Store deployment in localStorage
+      const deployment = {
+        id: crypto.randomUUID(),
+        url: mockUrl,
+        blockId: mockBlockId,
+        repoUrl: githubUrl,
+        createdAt: new Date().toISOString(),
+        status: "active" as const
+      };
+      
+      const existingDeployments = JSON.parse(localStorage.getItem("starfall-deployments") || "[]");
+      const updatedDeployments = [deployment, ...existingDeployments];
+      localStorage.setItem("starfall-deployments", JSON.stringify(updatedDeployments));
       
       setStatus("ready");
       setToast(`Successfully deployed to blockchain!`);
@@ -373,6 +390,12 @@ export default function StarfallApp() {
           </div>
           <div className="flex items-center gap-3">
             <span className="text-sm text-white/70">Welcome, {user.name}</span>
+            <Link 
+              to="/deployments"
+              className="text-sm text-white/70 hover:text-white transition"
+            >
+              My Deployments
+            </Link>
             <button
               onClick={handleLogout}
               className="text-sm text-white/70 hover:text-white transition"
