@@ -21,6 +21,7 @@ export default function StarfallApp() {
   // Auth state
   const [user, setUser] = useState<{ email: string; name: string } | null>(null);
   const [authLoading, setAuthLoading] = useState(true);
+  const [testMode, setTestMode] = useState(false);
   
   // Form state
   const [githubUrl, setGithubUrl] = useState("");
@@ -34,6 +35,11 @@ export default function StarfallApp() {
 
   // Check auth status on mount and listen for changes
   useEffect(() => {
+    if (testMode) {
+      setAuthLoading(false);
+      return;
+    }
+
     const unsubscribe = onAuthStateChanged((firebaseUser) => {
       if (firebaseUser) {
         const userData = {
@@ -51,7 +57,7 @@ export default function StarfallApp() {
     });
 
     return () => unsubscribe();
-  }, []);
+  }, [testMode]);
 
   // Auto-validate GitHub URL when it changes
   useEffect(() => {
@@ -89,7 +95,30 @@ export default function StarfallApp() {
     }
   }
 
+  function handleTestMode() {
+    setTestMode(true);
+    setUser({
+      email: "test@example.com",
+      name: "Test User"
+    });
+    setAuthLoading(false);
+    setToast("Test mode activated!");
+  }
+
   async function handleLogout() {
+    if (testMode) {
+      // Reset test mode
+      setTestMode(false);
+      setUser(null);
+      setGithubUrl("");
+      setGithubToken("");
+      setIsPrivateRepo(false);
+      setStatus("idle");
+      setVerdict(null);
+      setToast("");
+      return;
+    }
+
     try {
       const result = await signOutUser();
       if (result.success) {
@@ -270,6 +299,15 @@ export default function StarfallApp() {
                   {toast}
                 </div>
               )}
+
+              <div className="mt-6 pt-4 border-t border-white/10">
+                <button
+                  onClick={handleTestMode}
+                  className="w-full text-sm text-white/50 hover:text-white/70 transition"
+                >
+                  → Use Test Mode (Skip Google Login)
+                </button>
+              </div>
             </div>
           </div>
         </div>
