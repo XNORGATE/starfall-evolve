@@ -4,12 +4,13 @@ import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, User } from 'fir
 // Firebase configuration - Replace with your actual Firebase project config
 // Get this from: Firebase Console > Project Settings > General > Your apps > Web app
 const firebaseConfig = {
-  apiKey: "your-api-key-from-firebase-console",
-  authDomain: "your-project-id.firebaseapp.com", 
-  projectId: "your-project-id",
-  storageBucket: "your-project-id.appspot.com",
-  messagingSenderId: "your-messaging-sender-id",
-  appId: "your-app-id-from-firebase-console"
+  apiKey: "AIzaSyA51BBI0SMHT1QC-EGBXf4K_wcvZhyxIOI",
+  authDomain: "hackertiger-6821e.firebaseapp.com",
+  projectId: "hackertiger-6821e",
+  storageBucket: "hackertiger-6821e.firebasestorage.app",
+  messagingSenderId: "962064377413",
+  appId: "1:962064377413:web:cec4d457f0166fc34c252c",
+  measurementId: "G-N4X46WNQ90"
 };
 
 // TODO: Replace the above with your actual Firebase config from:
