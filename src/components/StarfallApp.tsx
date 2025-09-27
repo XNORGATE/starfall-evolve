@@ -146,7 +146,7 @@ export default function StarfallApp() {
       const [, owner, repo] = match;
       const cleanRepo = repo.replace(/\.git$/, "");
       
-      // Check if repo exists and is public
+      // Check if repo exists and is accessible
       const headers: Record<string, string> = {};
       if (token) {
         headers['Authorization'] = `token ${token}`;
@@ -157,7 +157,24 @@ export default function StarfallApp() {
       });
       
       if (response.status === 404) {
-        throw new Error("Repository not found or is private");
+        // 404 could mean either the repo doesn't exist or it's private and we don't have access
+        if (!token) {
+          // Try to determine if it might be a private repo by checking if the user exists
+          const userResponse = await fetch(`https://api.github.com/users/${owner}`);
+          if (userResponse.ok) {
+            // User exists, so repo is likely private
+            return {
+              isPrivate: true,
+              isValid: false,
+              requiresToken: true,
+              repoData: null
+            };
+          } else {
+            throw new Error("Repository or user not found");
+          }
+        } else {
+          throw new Error("Repository not found or access denied");
+        }
       }
       
       if (!response.ok) {
@@ -183,9 +200,18 @@ export default function StarfallApp() {
       // First validate GitHub repo access
       const repoValidation = await validateGitHubRepo(githubUrl.trim(), githubToken || undefined);
       
+      // Check if repo requires access token (likely private)
+      if (repoValidation.requiresToken && !githubToken) {
+        setIsPrivateRepo(true);
+        setStatus("idle");
+        setToast("This repository appears to be private. Please provide a GitHub access token to access it.");
+        return;
+      }
+      
       // Reset private repo flag since we got a successful response
       setIsPrivateRepo(false);
       
+      // Check if repo is confirmed private but we have a token
       if (repoValidation.isPrivate && !githubToken) {
         setIsPrivateRepo(true);
         setStatus("idle");
@@ -200,7 +226,7 @@ export default function StarfallApp() {
       const mockValidation = {
         ok: true,
         score: 0.85,
-        reasons: ["Repository structure looks good", "Contains valid project files", "Public repository accessible"]
+        reasons: ["Repository structure looks good", "Contains valid project files", repoValidation.isPrivate ? "Private repository accessible with token" : "Public repository accessible"]
       };
 
       setVerdict(mockValidation);
@@ -210,8 +236,7 @@ export default function StarfallApp() {
     } catch (e: any) {
       setStatus("error");
       setToast(e.message || "Something went wrong");
-      // Only set private repo flag if we explicitly detect it's private from the API response
-      // Don't set it based on error messages that might be misleading
+      // Don't automatically assume it's private based on error messages
     }
   }
 
