@@ -323,12 +323,6 @@ export default function StarfallApp() {
             <div className="text-center max-w-4xl mx-auto">
               {/* Brand Header */}
               <div className="flex items-center justify-center gap-4 mb-8">
-                <div className="relative">
-                  <span className="inline-flex h-16 w-16 items-center justify-center rounded-3xl bg-gradient-to-br from-orange-500 to-amber-600 text-white font-bold text-2xl shadow-2xl shadow-orange-500/30">
-                    🐅
-                  </span>
-                  <div className="absolute -inset-1 rounded-3xl bg-gradient-to-r from-orange-400 to-amber-400 opacity-20 blur animate-pulse" />
-                </div>
                 <div>
                   <h1 className="text-5xl font-black tracking-tight bg-gradient-to-r from-orange-400 via-amber-400 to-orange-500 bg-clip-text text-transparent">
                     HackerTiger
