@@ -347,7 +347,7 @@ export default function StarfallApp() {
                   </span>
                 </h2>
                 <p className="text-xl text-white/70 max-w-2xl mx-auto leading-relaxed">
-                  Deploy once, Evolve forever. 
+                  We do care your service. 
                   <span className="text-orange-300"> Zero downtime, infinite possibilities.</span>
                 </p>
               </div>
