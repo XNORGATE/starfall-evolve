@@ -309,63 +309,117 @@ export default function StarfallApp() {
   // Show login page if not authenticated
   if (!user) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-zinc-950 via-zinc-900 to-black text-white">
-        {/* Glow background accents */}
-        <div className="pointer-events-none fixed inset-0 overflow-hidden">
-          <div className="absolute -top-24 -left-24 h-64 w-64 rounded-full bg-fuchsia-600/20 blur-3xl" />
-          <div className="absolute -bottom-24 -right-24 h-72 w-72 rounded-full bg-indigo-600/20 blur-3xl" />
+      <div className="min-h-screen bg-gradient-to-br from-zinc-950 via-zinc-900 to-black text-white overflow-hidden">
+        {/* Enhanced background effects */}
+        <div className="pointer-events-none fixed inset-0">
+          <div className="absolute -top-40 -left-40 h-96 w-96 rounded-full bg-gradient-to-r from-orange-600/30 to-amber-600/30 blur-3xl animate-pulse" />
+          <div className="absolute -bottom-40 -right-40 h-96 w-96 rounded-full bg-gradient-to-r from-fuchsia-600/20 to-purple-600/20 blur-3xl" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-64 w-64 rounded-full bg-gradient-to-r from-orange-500/10 to-amber-500/10 blur-2xl" />
         </div>
 
-        <div className="relative flex min-h-screen items-center justify-center px-4">
-          <div className="mx-auto max-w-md">
-            <div className="text-center mb-8">
-              <div className="flex items-center justify-center gap-3 mb-6">
-                <span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-orange-500 to-amber-600 text-white font-bold text-lg">
-                  🐅
-                </span>
-                <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-orange-400 to-amber-400 bg-clip-text text-transparent">HackerTiger</h1>
-              </div>
-              <h2 className="text-2xl font-semibold mb-3 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">Welcome to the Future</h2>
-              <p className="text-lg font-medium mb-2 bg-gradient-to-r from-orange-300 to-amber-300 bg-clip-text text-transparent">
-                Deploy once, evolve forever
-              </p>
-              <p className="text-white/60 text-sm max-w-sm mx-auto">
-                Authenticate with Google to access next-generation blockchain hosting for your repositories.
-              </p>
-            </div>
-
-            <div className="rounded-3xl border border-white/10 bg-white/5 backdrop-blur p-6 shadow-2xl">
-              <button
-                onClick={handleGoogle}
-                disabled={authLoading}
-                className="group w-full inline-flex items-center justify-center gap-3 rounded-2xl bg-white text-black px-6 py-4 text-base font-medium shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:shadow-[0_8px_40px_rgb(0,0,0,0.18)] transition disabled:opacity-50"
-              >
-                <svg width="20" height="20" viewBox="0 0 48 48">
-                  <path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12 s5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C33.412,6.053,28.973,4,24,4C12.955,4,4,12.955,4,24 s8.955,20,20,20s20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"/>
-                  <path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,19.001,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657 C33.412,6.053,28.973,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"/>
-                  <path fill="#4CAF50" d="M24,44c4.874,0,9.292-1.865,12.636-4.915l-5.842-4.942C28.78,35.523,26.497,36,24,36 c-5.202,0-9.619-3.33-11.283-7.967l-6.537,5.036C9.48,39.556,16.227,44,24,44z"/>
-                  <path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.236-2.231,4.166-4.106,5.582 c0.001-0.001,0.002-0.001,0.003-0.002l5.842,4.942C36.727,39.611,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"/>
-                </svg>
-                Continue with Google
-                <span className="opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition text-sm">→</span>
-              </button>
-
-              {toast && (
-                <div className="mt-4 rounded-2xl border border-white/10 bg-white/10 p-3 text-sm text-white/90">
-                  {toast}
+        <div className="relative">
+          {/* Hero Section */}
+          <div className="container mx-auto px-6 pt-20 pb-12">
+            <div className="text-center max-w-4xl mx-auto">
+              {/* Brand Header */}
+              <div className="flex items-center justify-center gap-4 mb-8">
+                <div className="relative">
+                  <span className="inline-flex h-16 w-16 items-center justify-center rounded-3xl bg-gradient-to-br from-orange-500 to-amber-600 text-white font-bold text-2xl shadow-2xl shadow-orange-500/30">
+                    🐅
+                  </span>
+                  <div className="absolute -inset-1 rounded-3xl bg-gradient-to-r from-orange-400 to-amber-400 opacity-20 blur animate-pulse" />
                 </div>
-              )}
+                <div>
+                  <h1 className="text-5xl font-black tracking-tight bg-gradient-to-r from-orange-400 via-amber-400 to-orange-500 bg-clip-text text-transparent">
+                    HackerTiger
+                  </h1>
+                  <div className="flex items-center justify-center gap-2 mt-1">
+                    <span className="h-1 w-8 bg-gradient-to-r from-orange-400 to-amber-400 rounded-full" />
+                    <span className="text-xs uppercase tracking-widest text-orange-300/80 font-medium">Blockchain Hosting</span>
+                    <span className="h-1 w-8 bg-gradient-to-r from-amber-400 to-orange-400 rounded-full" />
+                  </div>
+                </div>
+              </div>
 
-              <div className="mt-6 pt-4 border-t border-white/10">
-                <button
-                  onClick={handleTestMode}
-                  className="w-full text-sm text-white/50 hover:text-white/70 transition"
-                >
-                  → Use Test Mode (Skip Google Login)
-                </button>
+              {/* Hero Text */}
+              <div className="mb-12">
+                <h2 className="text-4xl md:text-6xl font-bold mb-6 leading-tight">
+                  <span className="bg-gradient-to-r from-white via-gray-100 to-white bg-clip-text text-transparent">
+                    Deploy once,
+                  </span>
+                  <br />
+                  <span className="bg-gradient-to-r from-orange-300 via-amber-300 to-orange-400 bg-clip-text text-transparent">
+                    evolve forever
+                  </span>
+                </h2>
+                <p className="text-xl text-white/70 max-w-2xl mx-auto leading-relaxed">
+                  Revolutionary blockchain hosting platform that grows with your code. 
+                  <span className="text-orange-300"> Zero downtime, infinite possibilities.</span>
+                </p>
+              </div>
+
+              {/* Features Grid */}
+              <div className="grid md:grid-cols-3 gap-6 mb-16 max-w-3xl mx-auto">
+                <div className="group p-6 rounded-2xl border border-white/5 bg-white/5 backdrop-blur hover:bg-white/10 transition-all duration-300">
+                  <div className="text-2xl mb-3 group-hover:scale-110 transition-transform">⚡</div>
+                  <h3 className="font-semibold text-orange-300 mb-2">Lightning Fast</h3>
+                  <p className="text-sm text-white/60">Deploy in seconds with our optimized blockchain infrastructure</p>
+                </div>
+                <div className="group p-6 rounded-2xl border border-white/5 bg-white/5 backdrop-blur hover:bg-white/10 transition-all duration-300">
+                  <div className="text-2xl mb-3 group-hover:scale-110 transition-transform">🔒</div>
+                  <h3 className="font-semibold text-orange-300 mb-2">Ultra Secure</h3>
+                  <p className="text-sm text-white/60">Your code is protected by blockchain technology</p>
+                </div>
+                <div className="group p-6 rounded-2xl border border-white/5 bg-white/5 backdrop-blur hover:bg-white/10 transition-all duration-300">
+                  <div className="text-2xl mb-3 group-hover:scale-110 transition-transform">🚀</div>
+                  <h3 className="font-semibold text-orange-300 mb-2">Auto Scale</h3>
+                  <p className="text-sm text-white/60">Handles millions of users without breaking a sweat</p>
+                </div>
+              </div>
+
+              {/* CTA Section */}
+              <div className="max-w-md mx-auto">
+                <div className="rounded-3xl border border-orange-400/20 bg-gradient-to-br from-orange-500/10 to-amber-500/10 backdrop-blur p-8 shadow-2xl shadow-orange-500/20">
+                  <h3 className="text-xl font-bold mb-4 bg-gradient-to-r from-orange-300 to-amber-300 bg-clip-text text-transparent">
+                    Ready to Transform Your Deployment?
+                  </h3>
+                  
+                  <button
+                    onClick={handleGoogle}
+                    disabled={authLoading}
+                    className="group w-full inline-flex items-center justify-center gap-3 rounded-2xl bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white px-8 py-4 text-lg font-semibold shadow-2xl shadow-orange-500/30 hover:shadow-orange-500/50 transition-all duration-300 disabled:opacity-50 transform hover:scale-105"
+                  >
+                    <svg width="20" height="20" viewBox="0 0 48 48">
+                      <path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12 s5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C33.412,6.053,28.973,4,24,4C12.955,4,4,12.955,4,24 s8.955,20,20,20s20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"/>
+                      <path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,19.001,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657 C33.412,6.053,28.973,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"/>
+                      <path fill="#4CAF50" d="M24,44c4.874,0,9.292-1.865,12.636-4.915l-5.842-4.942C28.78,35.523,26.497,36,24,36 c-5.202,0-9.619-3.33-11.283-7.967l-6.537,5.036C9.48,39.556,16.227,44,24,44z"/>
+                      <path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.236-2.231,4.166-4.106,5.582 c0.001-0.001,0.002-0.001,0.003-0.002l5.842,4.942C36.727,39.611,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"/>
+                    </svg>
+                    Start Your Journey
+                    <span className="opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300">→</span>
+                  </button>
+
+                  {toast && (
+                    <div className="mt-4 rounded-2xl border border-orange-400/20 bg-orange-500/10 p-3 text-sm text-orange-100">
+                      {toast}
+                    </div>
+                  )}
+
+                  <div className="mt-6 pt-4 border-t border-white/10">
+                    <button
+                      onClick={handleTestMode}
+                      className="w-full text-sm text-white/50 hover:text-orange-300 transition-colors duration-300"
+                    >
+                      → Try Demo Mode (No Login Required)
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
+
+          {/* Bottom accent */}
+          <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-orange-400/50 to-transparent" />
         </div>
       </div>
     );
