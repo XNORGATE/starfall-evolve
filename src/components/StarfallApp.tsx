@@ -362,7 +362,7 @@ export default function StarfallApp() {
                 <div className="group p-6 rounded-2xl border border-white/5 bg-white/5 backdrop-blur hover:bg-white/10 transition-all duration-300">
                   <div className="text-2xl mb-3 group-hover:scale-110 transition-transform">🔒</div>
                   <h3 className="font-semibold text-orange-300 mb-2">Ultra Secure</h3>
-                  <p className="text-sm text-white/60">Your code is protected by blockchain technology</p>
+                  <p className="text-sm text-white/60">Your code will be scanned by AI agent to prevent data leak or any security threat</p>
                 </div>
                 <div className="group p-6 rounded-2xl border border-white/5 bg-white/5 backdrop-blur hover:bg-white/10 transition-all duration-300">
                   <div className="text-2xl mb-3 group-hover:scale-110 transition-transform">🚀</div>
