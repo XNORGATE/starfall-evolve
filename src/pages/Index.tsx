@@ -1,7 +1,16 @@
-import StarfallApp from "@/components/StarfallApp";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import LandingPage from "./LandingPage";
+import DeploymentManager from "./DeploymentManager";
 
 const Index = () => {
-  return <StarfallApp />;
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/deploy" element={<DeploymentManager />} />
+      </Routes>
+    </Router>
+  );
 };
 
 export default Index;
