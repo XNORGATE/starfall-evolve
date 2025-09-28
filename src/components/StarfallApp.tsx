@@ -339,7 +339,7 @@ export default function StarfallApp() {
               <div className="mb-12">
                 <h2 className="text-4xl md:text-6xl font-bold mb-6 leading-tight">
                   <span className="bg-gradient-to-r from-white via-gray-100 to-white bg-clip-text text-transparent">
-                    Deploy once,
+                    Deploy once
                   </span>
                   <br />
                   <span className="bg-gradient-to-r from-orange-300 via-amber-300 to-orange-400 bg-clip-text text-transparent">
