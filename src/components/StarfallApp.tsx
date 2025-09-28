@@ -320,16 +320,17 @@ export default function StarfallApp() {
           <div className="mx-auto max-w-md">
             <div className="text-center mb-8">
               <div className="flex items-center justify-center gap-3 mb-6">
-                <span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-white/10 backdrop-blur">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                    <path d="M12 3l7 4v10l-7 4-7-4V7l7-4z" stroke="currentColor" strokeWidth="1.5"/>
-                  </svg>
+                <span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-orange-500 to-amber-600 text-white font-bold text-lg">
+                  🐅
                 </span>
-                <h1 className="text-2xl font-semibold tracking-tight">Self‑Evolved Host</h1>
+                <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-orange-400 to-amber-400 bg-clip-text text-transparent">HackerTiger</h1>
               </div>
-              <h2 className="text-xl font-medium mb-2">Welcome to the Future</h2>
-              <p className="text-white/70 text-sm">
-                Authenticate with Google to access blockchain hosting for your repositories.
+              <h2 className="text-2xl font-semibold mb-3 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">Welcome to the Future</h2>
+              <p className="text-lg font-medium mb-2 bg-gradient-to-r from-orange-300 to-amber-300 bg-clip-text text-transparent">
+                Deploy once, evolve forever
+              </p>
+              <p className="text-white/60 text-sm max-w-sm mx-auto">
+                Authenticate with Google to access next-generation blockchain hosting for your repositories.
               </p>
             </div>
 
@@ -382,11 +383,11 @@ export default function StarfallApp() {
       <header className="relative">
         <div className="mx-auto max-w-6xl px-4 py-8 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <span className="inline-flex h-9 w-9 items-center justify-center rounded-2xl bg-white/10 backdrop-blur">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 3l7 4v10l-7 4-7-4V7l7-4z" stroke="currentColor" strokeWidth="1.5"/></svg>
+            <span className="inline-flex h-9 w-9 items-center justify-center rounded-2xl bg-gradient-to-br from-orange-500 to-amber-600 text-white text-sm font-bold">
+              🐅
             </span>
-            <h1 className="text-lg font-semibold tracking-tight">Self‑Evolved Host</h1>
-            <span className="ml-2 rounded-full border border-white/15 px-2 py-0.5 text-[10px] uppercase tracking-wider text-white/70">MVP</span>
+            <h1 className="text-lg font-bold tracking-tight bg-gradient-to-r from-orange-400 to-amber-400 bg-clip-text text-transparent">HackerTiger</h1>
+            <span className="ml-2 rounded-full border border-orange-400/30 bg-orange-400/10 px-2 py-0.5 text-[10px] uppercase tracking-wider text-orange-300">Beta</span>
           </div>
           <div className="flex items-center gap-3">
             <span className="text-sm text-white/70">Welcome, {user.name}</span>
@@ -417,9 +418,11 @@ export default function StarfallApp() {
         </ol>
 
         {/* Card */}
-        <section className="mx-auto max-w-3xl rounded-3xl border border-white/10 bg-white/5 backdrop-blur p-6 shadow-2xl">
-          <h2 className="text-xl font-semibold tracking-tight">Link your repository</h2>
-          <p className="mt-1 text-sm text-white/70">Only your URL is sent. Keys, IPFS, and blockchain stay on the server.</p>
+        <section className="mx-auto max-w-3xl rounded-3xl border border-orange-400/20 bg-gradient-to-br from-orange-500/5 to-amber-500/5 backdrop-blur p-8 shadow-2xl shadow-orange-500/10">
+          <div className="text-center mb-6">
+            <h2 className="text-2xl font-bold tracking-tight bg-gradient-to-r from-orange-400 to-amber-400 bg-clip-text text-transparent mb-2">Link your repository</h2>
+            <p className="text-white/60">Only your URL is sent. Keys, IPFS, and blockchain stay on the server.</p>
+          </div>
 
           <div className="mt-4 space-y-3">
             <div className="flex gap-2">
